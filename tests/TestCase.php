@@ -1,37 +1,24 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace AdamDziuk\LaravelAgentCost\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use AdamDziuk\LaravelAgentCost\LaravelAgentCostServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use VendorName\Skeleton\SkeletonServiceProvider;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
-    }
-
     protected function getPackageProviders($app)
     {
         return [
-            SkeletonServiceProvider::class,
+            LaravelAgentCostServiceProvider::class,
         ];
     }
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
-
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/../database/migrations') as $migration) {
-            (include $migration->getRealPath())->up();
-         }
-         */
+        // Pin the cache store explicitly so tests don't depend on
+        // whatever the shared testbench skeleton's .env happens to
+        // resolve `cache.default` to.
+        $app['config']->set('cache.default', 'array');
     }
 }

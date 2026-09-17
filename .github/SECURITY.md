@@ -2,14 +2,14 @@
 
 ## Supported Versions
 
-This package is still pre-1.0 (`0.x`). Only the latest released version is supported with security fixes, so please make sure you're on the newest release before reporting an issue.
+This package follows semantic versioning starting from `1.0.0`. Only the latest `1.x` release is supported with security fixes, so please make sure you're on the newest release before reporting an issue.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| Latest  | :white_check_mark: |
-| Older   | :x:                |
+| 1.x     | :white_check_mark: |
+| < 1.0   | :x:                |
 
-Once a stable `1.0` is released, this table will be updated to list which major versions still receive fixes.
+This table will be updated once a new major version is released.
 
 ## Reporting a Vulnerability
 

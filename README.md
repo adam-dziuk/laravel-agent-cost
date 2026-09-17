@@ -1,11 +1,11 @@
-# Calculate AI costs for Laravel AI SDK
+# Laravel Agent Cost
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/adam-dziuk/laravel-agent-cost.svg?style=flat-square)](https://packagist.org/packages/adam-dziuk/laravel-agent-cost)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/adam-dziuk/laravel-agent-cost/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/adam-dziuk/laravel-agent-cost/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/adam-dziuk/laravel-agent-cost/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/adam-dziuk/laravel-agent-cost/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/adam-dziuk/laravel-agent-cost.svg?style=flat-square)](https://packagist.org/packages/adam-dziuk/laravel-agent-cost)
 
-Know what your AI calls actually cost. This package syncs [LiteLLM's](https://github.com/BerriAI/litellm) community-maintained model pricing data and uses it to calculate the USD cost of a [Laravel AI SDK](https://github.com/laravel/ai) response, or of any token counts you already have on hand.
+Know what your AI calls actually cost - now you can calculate AI costs for Laravel AI SDK. This package syncs [LiteLLM's](https://github.com/BerriAI/litellm) community-maintained model pricing data and uses it to calculate the USD cost of a [Laravel AI SDK](https://github.com/laravel/ai) response, or of any token counts you already have on hand.
 
 ```php
 use AdamDziuk\LaravelAgentCost\Facades\AiCost;

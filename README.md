@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/adam-dziuk/laravel-agent-cost/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/adam-dziuk/laravel-agent-cost/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/adam-dziuk/laravel-agent-cost.svg?style=flat-square)](https://packagist.org/packages/adam-dziuk/laravel-agent-cost)
 
-Know what your AI calls actually cost. This package syncs [LiteLLM's](https://github.com/BerriAI/litellm) community-maintained model pricing data and uses it to calculate the USD cost of a [Laravel AI SDK](https://github.com/laravel/ai) response — or of any token counts you already have on hand.
+Know what your AI calls actually cost. This package syncs [LiteLLM's](https://github.com/BerriAI/litellm) community-maintained model pricing data and uses it to calculate the USD cost of a [Laravel AI SDK](https://github.com/laravel/ai) response, or of any token counts you already have on hand.
 
 ```php
 use AdamDziuk\LaravelAgentCost\Facades\AiCost;
@@ -68,7 +68,7 @@ Before calculating any costs, sync the pricing data at least once:
 php artisan ai-prices:sync
 ```
 
-If the download or the response fails to parse, the command exits with an error and leaves any previously cached pricing data untouched — you're never left without prices because of a temporary network hiccup. Schedule it to run regularly so pricing stays current, for example in `routes/console.php`:
+If the download or the response fails to parse, the command exits with an error and leaves any previously cached pricing data untouched. You're never left without prices because of a temporary network hiccup. Schedule it to run regularly so pricing stays current, for example in `routes/console.php`:
 
 ```php
 Schedule::command('ai-prices:sync')->daily();
@@ -89,7 +89,7 @@ $response = SupportAgent::make()->prompt('Summarize this document.');
 $cost = AiCost::for($response); // e.g. 0.007500
 ```
 
-The model and provider are read from the response's own metadata, and prompt, completion, cached, and reasoning tokens are all billed at their correct rates — no need to pass anything else. `laravel/ai` is not a hard dependency of this package: `AiCost::for()` only needs it installed when you actually call it with one of its response objects.
+The model and provider are read from the response's own metadata, and prompt, completion, cached, and reasoning tokens are all billed at their correct rates, so there's no need to pass anything else. `laravel/ai` is not a hard dependency of this package: `AiCost::for()` only needs it installed when you actually call it with one of its response objects.
 
 ### Manual calculation
 
@@ -106,7 +106,7 @@ AiCost::tokens('azure/o3', inputTokens: 1000, outputTokens: 500);
 
 ### When pricing data is missing
 
-`AiCost::tokens()` and `AiCost::for()` throw `AdamDziuk\LaravelAgentCost\Exceptions\UnknownModelException` when there's no pricing data for a model — run `ai-prices:sync` first, or add an [override](#overriding-prices) for it. `AiCost::for()` throws `AdamDziuk\LaravelAgentCost\Exceptions\UnsupportedResponseException` if you pass it a response that doesn't expose any token usage (audio and reranking responses, for example).
+`AiCost::tokens()` and `AiCost::for()` throw `AdamDziuk\LaravelAgentCost\Exceptions\UnknownModelException` when there's no pricing data for a model. Run `ai-prices:sync` first, or add an [override](#overriding-prices) for it. `AiCost::for()` throws `AdamDziuk\LaravelAgentCost\Exceptions\UnsupportedResponseException` if you pass it a response that doesn't expose any token usage (audio and reranking responses, for example).
 
 ### Overriding prices
 

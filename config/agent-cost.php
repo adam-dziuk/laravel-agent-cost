@@ -37,4 +37,19 @@ return [
         // ],
     ],
 
+    /*
+     * When enabled, the cost of every laravel/ai agent invocation
+     * (`prompt()` and `stream()`) is automatically recorded to the
+     * database, keyed by the agent's class. This is what powers
+     * `AiCost::agent()`. Disable it if you don't want a permanent log
+     * of every agent call.
+     */
+    'agent_tracking' => [
+        'enabled' => env('AGENT_COST_TRACK_AGENTS', true),
+
+        // The table recorded invocations are stored in. Change this if
+        // it clashes with a table you already have.
+        'table' => env('AGENT_COST_TABLE', 'agent_cost_records'),
+    ],
+
 ];

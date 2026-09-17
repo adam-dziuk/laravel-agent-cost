@@ -30,6 +30,17 @@ class AiCost
     }
 
     /**
+     * Start a query over the total recorded cost of a laravel/ai agent
+     * (matched by class), optionally narrowed down to a date or month
+     * range. Requires agent cost tracking to be enabled, since it reads
+     * from the invocations `RecordAgentCost` has already logged.
+     */
+    public function agent(object|string $agent): AgentCostQuery
+    {
+        return new AgentCostQuery($agent);
+    }
+
+    /**
      * Calculate the USD cost of a laravel/ai response, such as a
      * TextResponse, AgentResponse, StructuredAgentResponse, ImageResponse,
      * TranscriptionResponse, or EmbeddingsResponse.

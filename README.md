@@ -16,6 +16,8 @@ $response = SupportAgent::make()->prompt('What is a llama?'); // laravel/ai
 AiCost::for($response); // 0.0075
 
 AiCost::tokens('gpt-4o', inputTokens: 1000, outputTokens: 500); // 0.0075
+
+AiCost::agent(SupportAgent::make())->monthFrom('2026-01')->total(); // total SupportAgent cost from January 2026 onward
 ```
 
 ## Installation
@@ -24,6 +26,12 @@ You can install the package via composer:
 
 ```bash
 composer require adam-dziuk/laravel-agent-cost
+```
+
+Run the migrations to create the `agent_cost_records` table used by [`AiCost::agent()`](#tracking-the-total-cost-of-an-agent):
+
+```bash
+php artisan migrate
 ```
 
 You can publish the config file with:
@@ -57,6 +65,14 @@ return [
         //     'input_cost_per_token' => 0.0000025,
         //     'output_cost_per_token' => 0.00001,
         // ],
+    ],
+
+    // Automatically records the cost of every laravel/ai agent
+    // invocation, so `AiCost::agent()` can total it up. See "Tracking
+    // the total cost of an agent" below.
+    'agent_tracking' => [
+        'enabled' => env('AGENT_COST_TRACK_AGENTS', true),
+        'table' => env('AGENT_COST_TABLE', 'agent_cost_records'),
     ],
 
 ];
@@ -102,6 +118,50 @@ AiCost::tokens('gpt-4o', inputTokens: 1000, outputTokens: 500); // 0.0075
 
 // Provider-prefixed keys, like LiteLLM uses for Azure, are resolved too.
 AiCost::tokens('azure/o3', inputTokens: 1000, outputTokens: 500);
+```
+
+### Tracking the total cost of an agent
+
+Every time a [laravel/ai](https://github.com/laravel/ai) agent finishes a `prompt()` or `stream()` call, this package automatically records its cost to the database, keyed by the agent's class. `AiCost::agent()` lets you total that up, optionally narrowed down to a date or month range:
+
+```php
+use AdamDziuk\LaravelAgentCost\Facades\AiCost;
+use App\Ai\Agents\SupportAgent;
+
+AiCost::agent(SupportAgent::make())->total(); // every recorded invocation of SupportAgent, ever
+AiCost::agent(SupportAgent::class)->total(); // a class name works too, no instance needed
+
+AiCost::agent(SupportAgent::make())
+    ->dateFrom('2026-01-01')
+    ->dateTo('2026-01-31')
+    ->total();
+
+AiCost::agent(SupportAgent::make())
+    ->monthFrom('2026-01')
+    ->monthTo('2026-03')
+    ->total();
+```
+
+Costs are tracked per agent *class*, not per instance, since `laravel/ai` agents are typically stateless value objects created fresh on every call (`SupportAgent::make()`).
+
+Run `php artisan migrate` to create the `agent_cost_records` table this relies on. Failed invocations (`AgentFailed`) aren't recorded, since they carry no usage information; invocations for a model with no pricing data are silently skipped rather than breaking the agent call.
+
+If that table name clashes with something you already have, change it before running the migration:
+
+```php
+// config/agent-cost.php
+'agent_tracking' => [
+    'table' => 'my_custom_table_name', // or set AGENT_COST_TABLE in .env
+],
+```
+
+If you don't want a permanent log of every agent call, turn tracking off:
+
+```php
+// config/agent-cost.php
+'agent_tracking' => [
+    'enabled' => false,
+],
 ```
 
 ### When pricing data is missing

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static float tokens(string $model, int $inputTokens, int $outputTokens)
  * @method static float for(object $response)
+ * @method static \AdamDziuk\LaravelAgentCost\AgentCostQuery agent(object|string $agent)
  *
  * @see \AdamDziuk\LaravelAgentCost\AiCost
  */

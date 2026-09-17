@@ -1,5 +1,6 @@
 <?php
 
+use AdamDziuk\LaravelAgentCost\Models\AgentCostRecord;
 use AdamDziuk\LaravelAgentCost\Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
 
@@ -21,4 +22,22 @@ function seedAgentCostPrices(array $models, string $syncedAt = 'yesterday'): voi
         'synced_at' => $syncedAt,
         'models' => $models,
     ]);
+}
+
+/**
+ * Directly insert an agent cost record with an explicit `created_at`,
+ * bypassing the `RecordAgentCost` listener, so date/month filtering can be
+ * tested without needing to travel through time.
+ */
+function createAgentCostRecord(string $agent, float $cost, string $createdAt): AgentCostRecord
+{
+    $record = AgentCostRecord::query()->create([
+        'agent' => $agent,
+        'model' => 'gpt-4o',
+        'cost' => $cost,
+    ]);
+
+    $record->forceFill(['created_at' => $createdAt])->save();
+
+    return $record;
 }

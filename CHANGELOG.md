@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-agent-cost` will be documented in this file.
 
+## v1.0.1 - 2026-09-29
+
+### What's new?
+
+- Prebuilt dashboard - use it by enabling in the configuration file
+
 ## laravel-agent-cost v1.0.0 - 2026-09-17
 
 ### laravel-agent-cost v1.0.0

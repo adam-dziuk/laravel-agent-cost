@@ -21,6 +21,10 @@ class TestCase extends Orchestra
         // resolve `cache.default` to.
         $app['config']->set('cache.default', 'array');
 
+        // The dashboard runs through the `web` middleware group, whose
+        // cookie encryption needs an application key.
+        $app['config']->set('app.key', 'base64:'.base64_encode(str_repeat('a', 32)));
+
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
             'driver' => 'sqlite',

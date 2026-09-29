@@ -75,6 +75,18 @@ return [
         'table' => env('AGENT_COST_TABLE', 'agent_cost_records'),
     ],
 
+    // A read-only web dashboard of every tracked agent's cost over time,
+    // shown to admins only. See "Viewing agent costs in the browser" below.
+    'dashboard' => [
+        'enabled' => env('AGENT_COST_DASHBOARD_ENABLED', true),
+        'path' => env('AGENT_COST_DASHBOARD_PATH', 'agent-cost'),
+        'middleware' => ['web'],
+        'admin' => [
+            'attribute' => env('AGENT_COST_ADMIN_ATTRIBUTE', 'is_admin'),
+            'value' => env('AGENT_COST_ADMIN_VALUE', true),
+        ],
+    ],
+
 ];
 ```
 
@@ -163,6 +175,34 @@ If you don't want a permanent log of every agent call, turn tracking off:
     'enabled' => false,
 ],
 ```
+
+### Viewing agent costs in the browser
+
+The package ships a read-only dashboard at `/agent-cost` that lists every tracked agent with its cost, share of the total, number of invocations, and a per-day trend, next to a chart of your total spend per day. It covers the last 7, 30, or 90 days, or the last 12 months broken down per month. It reads the same records as [`AiCost::agent()`](#tracking-the-total-cost-of-an-agent), so it needs no extra setup and no frontend build.
+
+Only admins can see it; everyone else, guests included, gets a 403. By default a user counts as an admin when their `is_admin` attribute is `true`. Point it at whatever attribute your app actually uses:
+
+```php
+// config/agent-cost.php
+'dashboard' => [
+    'path' => 'admin/agent-costs', // serve it somewhere else
+    'middleware' => ['web', 'auth'], // send guests to your login page instead of a 403
+    'admin' => [
+        'attribute' => 'role', // dot notation reaches into relations, e.g. "role.name"
+        'value' => 'admin', // enum-cast attributes are compared by their backing value
+    ],
+],
+```
+
+A boolean `value` also matches an uncast `1`/`"1"` column, so `is_admin` works with or without a `boolean` cast. For anything a single attribute can't express, define your own `viewAgentCost` gate, for example in your `AppServiceProvider`. It replaces the package's default check:
+
+```php
+use Illuminate\Support\Facades\Gate;
+
+Gate::define('viewAgentCost', fn (User $user) => $user->hasPermission('billing.view'));
+```
+
+To turn the dashboard off entirely, set `AGENT_COST_DASHBOARD_ENABLED=false`.
 
 ### When pricing data is missing
 

@@ -52,4 +52,31 @@ return [
         'table' => env('AGENT_COST_TABLE', 'agent_cost_records'),
     ],
 
+    /*
+     * A read-only web dashboard listing every tracked agent and what it
+     * has cost over time. It is only ever shown to users who pass the
+     * `viewAgentCost` gate, which by default checks a single attribute of
+     * the authenticated user against the `admin` settings below. Everyone
+     * else, guests included, gets a 403.
+     */
+    'dashboard' => [
+        'enabled' => env('AGENT_COST_DASHBOARD_ENABLED', true),
+
+        // The URI the dashboard is served at, e.g. "admin/agent-costs".
+        'path' => env('AGENT_COST_DASHBOARD_PATH', 'agent-cost'),
+
+        // The middleware the dashboard runs through. Add "auth" to send
+        // guests to your login page instead of showing them a 403.
+        'middleware' => ['web'],
+
+        // The user attribute that marks someone as an admin, and the value
+        // it must hold, e.g. `is_admin` => true or `role` => 'admin'. Dot
+        // notation reaches into relations ("role.name"), and enum-cast
+        // attributes are compared by their backing value.
+        'admin' => [
+            'attribute' => env('AGENT_COST_ADMIN_ATTRIBUTE', 'is_admin'),
+            'value' => env('AGENT_COST_ADMIN_VALUE', true),
+        ],
+    ],
+
 ];

@@ -245,6 +245,10 @@ Please review [our security policy](../../security/policy) on how to report secu
 - Pricing data is downloaded from [LiteLLM](https://github.com/BerriAI/litellm), licensed under the [MIT license](https://github.com/BerriAI/litellm/blob/main/LICENSE). This package is not affiliated with or endorsed by LiteLLM.
 - [All Contributors](../../contributors)
 
+## Contributing
+
+**Contributions are more than welcome!**
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
